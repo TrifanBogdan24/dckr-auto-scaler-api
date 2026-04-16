@@ -29,37 +29,18 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata (tags, labels) for API
-        id: meta-api
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_API }}
-          tags: |
-            type=raw,value=latest
-            type=sha
 
-      - name: Build and push API Service
-        uses: docker/build-push-action@v5
-        with:
-          context: ./api-service
-          push: true
-          tags: ${{ id.meta-api.outputs.tags }}
-          labels: ${{ id.meta-api.outputs.labels }}
+      - name: Build API Service
+        run: docker build -t ghcr.io/${{ github.repository }}:latest ./api-service
 
-      - name: Extract metadata for Worker
-        id: meta-worker
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_WORKER }}
-          tags: |
-            type=raw,value=latest
-            type=sha
 
-      - name: Build and push Job Worker
-        uses: docker/build-push-action@v5
-        with:
-          context: ./job-worker
-          push: true
-          tags: ${{ id.meta-worker.outputs.tags }}
-          labels: ${{ id.meta-worker.outputs.labels }}
-    
+      - name: Build Job Worker
+        run: docker build -t ghcr.io/${{ github.repository }}:latest ./job-worker
+
+      - name: Push API Service
+        run: docker push ghcr.io/${{ github.repository }}:latest
+
+
+      - name: Push Job Worker
+        run: docker push ghcr.io/${{ github.repository }}:latest
+
