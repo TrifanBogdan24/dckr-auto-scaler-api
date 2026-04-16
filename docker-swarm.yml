@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13
+    networks:
+      - job_net
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: jobsdb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  api-service:
+    image: api-service:latest
+    build: ./api-service
+    networks:
+      - job_net
+    ports:
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      DATABASE_URL: postgresql://user:pass@db:5432/jobsdb
+      WORKER_NETWORK: job_net
+    deploy:
+      replicas: 1
+
+  # job-worker este doar definita pentru a fi construita, 
+  # nu va fi pornita de Swarm initial (replicas: 0)
+  job-worker:
+    image: job-worker:latest
+    build: ./job-worker
+    deploy:
+      replicas: 0
+      restart_policy:
+        condition: none
+
+volumes:
+  pgdata:
+
+networks:
+  job_net:
+    name: job_net
+    driver: overlay
+    attachable: true
