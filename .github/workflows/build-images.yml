@@ -31,16 +31,16 @@ jobs:
 
 
       - name: Build API Service
-        run: docker build -t ghcr.io/trifanbodan24/dckr-auto-scaler-api/api-service:latest ./api-service
+        run: docker build -t ghcr.io/trifanbogdan24/dckr-auto-scaler-api/api-service:latest ./api-service
 
 
       - name: Build Job Worker
-        run: docker build -t ghcr.io/trifanbodan24/dckr-auto-scaler-api/job-worker:latest ./job-worker
+        run: docker build -t ghcr.io/trifanbogdan24/dckr-auto-scaler-api/job-worker:latest ./job-worker
 
       - name: Push API Service
-        run: docker push ghcr.io/trifanbodan24/dckr-auto-scaler-api/api-service:latest
+        run: docker push ghcr.io/trifanbogdan24/dckr-auto-scaler-api/api-service:latest
 
 
       - name: Push Job Worker
-        run: docker push ghcr.io/trifanbodan24/dckr-auto-scaler-api/job-worker:latest
+        run: docker push ghcr.io/trifanbogdan24/dckr-auto-scaler-api/job-worker:latest
 
